@@ -28,6 +28,36 @@ int main(){
     return 0;
     system("pause");
 }
+01.1有序数组中找到<=num最右的位置
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+//找到数组中>=key的最右侧数字
+class Solution {
+public:
+    static void BSFindNearLeft(vector<int>& a, int key) {
+        int L = 0, R = a.size() - 1; int index=-1;
+        while (L<=R) {
+            int mid = L + ((R - L) >> 1);
+            if (a[mid]<= key) {
+                 L = mid + 1;
+                index = mid;
+            }
+            else {
+               R = mid - 1; 
+            }
+        }
+        cout<<index;//返回所在位置的小标
+    }
+};
+//for test
+int main(){
+    vector<int>test{ 0,1,1,2,3,4,5,5,6,6,6,7,8,9 };
+    Solution::BSFindNearLeft(test, 6);
+    return 0;
+    system("pause");
+}
 02 排序
 #include<iostream>//时间复杂度为O(N^2)的排序
 #include<vector>
@@ -84,4 +114,192 @@ int main()//测试
 {
 	vector<int>test{ 6,4,5,3,2,9 };
 	Printit(insertsort(test));
+}
+03 有序数组中找到num
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<ctime>
+using namespace std;
+//二分查找有序数组中该数字是否存在
+class Solution {
+public:
+	static bool isExist(vector<int>& arr, int key) {
+		int n = arr.size();
+		int L = 0, R = n - 1, mid = 0;
+		if (n == 0) {
+			return false;
+		}
+		while (L < R) {
+			mid = L + ((R - L) >> 1);
+			if (arr[mid] == key) {
+				return true;
+			}
+			if (arr[mid] > key) {
+				R = mid - 1;
+			}
+			else if (arr[mid] < key) {
+				L = mid +1;
+			}
+		}
+		return arr[L] == key;
+	}
+	static bool test(vector<int>& a, int key) {
+		int n = a.size();
+		for (int i : a) {
+			if (i == key) {
+				return true;
+			}
+		}
+		return false;
+	}
+};
+int main() {
+	vector<int>res{ 1,5,6,7,2,8,7,4,10 };
+	srand((int)time(NULL));
+	sort(res.begin(), res.end());
+	int maxnum = res[res.size() - 1];
+	int value = rand() % (0, 2*maxnum);
+	bool k = true;
+	if (Solution::isExist(res, value) != Solution::test(res, value))
+	{
+		k = ~k;
+	}
+	if (k){
+			cout << "Munition!";
+	}		
+	else {
+		cout << "scheisse!";
+	}
+	return 0;
+	system("pause");
+}
+04 添加对数器验证
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+//数组元素没有负数
+void Swapl(int& a, int& b) {
+	a = a ^ b; b = a ^ b; a = a ^ b;
+}
+//数组元素存在负数
+void Swapr(int& a, int& b) {
+	int temp = a;
+	a = b;
+	b = temp;
+}
+vector<int>& Choosensort(vector<int>& a) {
+	if (a.size() < 2) {
+		return a;
+	}
+	for (int i = 0; i < a.size(); i++) {
+		int minnum = i;
+		for (int j = i + 1; j < a.size() - 1; j++) {
+			minnum = a[j] < a[minnum] ? j : minnum; //找到最小的索引
+		}
+		Swapr(a[i], a[minnum]);
+	}
+	return a;
+}
+//比较函数，调库函数
+void comperator(vector<int>a) {
+	sort(a.begin(), a.end());
+}
+//产生随机的数组种子
+vector<int>& generateRandomArr(int maxSize, int maxValue) {
+	srand((unsigned)time(NULL));
+	vector<int>test(rand() % (0, maxSize));
+	for (int i = 0; i < test.size(); i++) {
+		test[i] = rand() % (0, maxValue);
+	}
+	return test;
+}
+vector<int> &copyarr(vector<int>& a) {
+		vector<int>ans;
+		for (int i = 0; i < a.size(); i++) {
+			ans.push_back(a[i]);
+	}
+		return ans;
+}
+//对数器
+bool isEqual(vector<int>& a, vector<int>& b) {
+	if (a.size() != b.size()) {
+		return false;
+	}
+	for (int i = 0; i < a.size(); i++) {
+		if (a[i] != b[i]) {
+			return false;
+		}
+	}
+}
+//打印
+void Printit(vector<int>& s) {
+	for (int i = 0; i < s.size(); i++) {
+		cout << s[i] << " ";
+	}
+	cout << endl;
+}
+void main() {
+	int maxsize = 10,maxvalue = 10,testTime=1;
+	bool flag = true; vector<int>arr1; vector<int>arr2;
+	//生成测试用例
+	for (int i = 0; i < testTime; i++) {
+		 arr1= generateRandomArr(maxsize, maxvalue);
+		 arr2 = copyarr(arr1);
+		Choosensort(arr1);
+		comperator(arr2);
+		if (!isEqual(arr1, arr2)) {
+			flag = false;
+				break;
+				Printit(arr1);
+				Printit(arr2);
+		}
+		arr1.clear();
+		arr2.clear();
+	}
+	cout << flag << endl;
+	system("pause");
+}
+05 给定一个数组arr，已知任何两个相邻的数都不相等，找到随便一个局部最小位置返回
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+//给定一个数组arr，已知任何两个相邻的数都不相等，找到随便一个局部最小位置返回
+class Solution {
+public:
+    static int GetLessindex(vector<int>& a) {
+        if (a.size() == 1) {
+            return 0;
+        }
+        else if (a[0] < a[1]) {
+            return 0;
+        }
+        else if (a[a.size() - 1] < a[a.size() - 2]) {
+            return a.size() - 1;
+        }
+        int L = 1, R = a.size() - 2, mid = 0;
+        while (L<R) {
+            mid = L + ((R - L) >> 1);
+            if (a[mid]>a[mid-1]) {
+                R = mid - 1;
+            }
+            else if(a[mid]>a[mid+1]){
+               L = mid+1; 
+            }
+            else//一次找到极小点，直接返回
+            {
+                return mid;
+            }
+        }
+        return L;//返回所在位置的小标
+    }
+};
+//for test
+int main(){
+    vector<int>test{ 5,5,4,3,2,3,6,7 };
+    cout<<Solution::GetLessindex(test);
+    return 0;
+    system("pause");
 }
