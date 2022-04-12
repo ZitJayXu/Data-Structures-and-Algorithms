@@ -1,0 +1,30 @@
+01 有序数组中找到>=num最左的位置
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+//找到数组中>=key的最左侧数字
+class Solution {
+public:
+    static void BSFindNearLeft(vector<int>& a, int key) {
+        int L = 0, R = a.size() - 1; int index=-1;
+        while (L<=R) {
+            int mid = L + ((R - L) >> 1);
+            if (a[mid] >= key) {
+                R = mid - 1;
+                index = mid;
+            }
+            else {
+                L = mid + 1;
+            }
+        }
+        cout<<index;//返回所在位置的小标
+    }
+};
+//for test
+int main(){
+    vector<int>test{ 0,1,1,2,3,4,5,5,6,6,6,7,8,9 };
+    Solution::BSFindNearLeft(test, 6);
+    return 0;
+    system("pause");
+}
