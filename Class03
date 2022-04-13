@@ -1,0 +1,132 @@
+01 反转单链表、反转双链表
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+//反转单链表
+    //定义节点
+    struct Node {
+        int value;
+        struct Node *next;
+    };
+
+    Node* reverseLinklist(Node* phead) {
+        Node *pre =nullptr;
+        Node* next = nullptr;
+        while (phead!=nullptr) {
+            next = phead->next;
+            phead->next = pre;
+            pre = phead;
+            phead = next;
+        }
+        return pre;
+    }
+    Node* createnode(vector<int>a)//建立单链表并传入数据
+    {
+       Node* head = new Node();
+        Node* cur = head;
+        for (int i = 0; i < a.size() - 1; i++) {
+            head->value = a[i];
+            head->next = NULL;
+
+            Node* p = new Node();
+            p->value = a[i + 1];
+            p->next = NULL;
+
+            head->next = p;
+            head = head->next;
+        }
+        head->next = NULL;
+        return cur;
+    }
+    void PrintNode(Node* list)//打印表单
+    {
+        Node* p;
+        p = list;
+        while (p != NULL)
+        {
+            cout << p->value << endl;
+            p = p->next;
+        }
+    }
+//for test
+int main(){
+    vector<int>test{1,2,3,4,5};
+    Node* Head= createnode(test);
+     PrintNode(Head);
+     cout << "反转后" << endl;
+     Node *ans=reverseLinklist(Head);
+     PrintNode(ans);
+    return 0;
+}
+02 在链表中删除指定值的所有节点
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+//删除指定数字的节点
+    //定义节点
+    struct Node {
+        int value;
+        struct Node *next;
+    };
+
+    Node* removeValue(Node* phead,int num) {
+        Node *pre =phead;
+        Node* cur = phead;
+        while (phead!=nullptr){//排除头节点为待删节点情况
+            if (phead->value != num) {
+                break;
+            }
+            phead = phead->next;
+        }
+        while (cur != nullptr) {
+            if (cur->value == num) {
+                pre->next = cur->next;
+            }
+            else {
+                pre = cur;
+            }
+            cur = cur->next;
+        }
+        return phead;
+    }
+    Node* createnode(vector<int>a)//建立单链表并传入数据
+    {
+       Node* head = new Node();
+        Node* cur = head;
+        for (int i = 0; i < a.size() - 1; i++) {
+            head->value = a[i];
+            head->next = NULL;
+
+            Node* p = new Node();
+            p->value = a[i + 1];
+            p->next = NULL;
+
+            head->next = p;
+            head = head->next;
+        }
+        head->next = NULL;
+        return cur;
+    }
+    void PrintNode(Node* list)//打印表单
+    {
+        Node* p;
+        p = list;
+        while (p != NULL)
+        {
+            cout << p->value << endl;
+            p = p->next;
+        }
+    }
+//for test
+int main(){
+    vector<int>test{1,2,3,4,5};
+    Node* Head= createnode(test);
+     PrintNode(Head);
+     cout << "删除后" << endl;
+     Node *ans=removeValue(Head,3);
+     PrintNode(ans);
+    return 0;
+}
+
