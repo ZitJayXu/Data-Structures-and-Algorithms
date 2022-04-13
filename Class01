@@ -255,6 +255,7 @@ void main() {
 				Printit(arr1);
 				Printit(arr2);
 		}
+		
 		arr1.clear();
 		arr2.clear();
 	}
