@@ -189,8 +189,121 @@ int main(){
     return 0;
 }
 07 两个队列实现栈
-08 用递归行为得到数组中的最大值，并用master公式来估计时间复杂度
+#include <iostream>
 
+#include <queue>
+using namespace std;
+
+template <class T>
+class Cstack {
+
+public:
+	Cstack() {}
+	~Cstack() {}
+	void push(const T& val) {
+		if (queue1.empty() && queue2.empty()) {
+			queue1.push(val);
+		}
+		if (queue2.empty()) {
+			queue1.push(val);
+		}
+		else {
+			queue2.push(val);
+		}
+	}
+	T pop() {
+		if (queue1.empty()) {
+			if (queue2.empty()) {
+				cout << "stack is empty" << endl;
+			}
+			else {
+				if (queue2.size() == 1) {
+					T result = queue2.front();
+					queue2.pop();
+					return  result;
+				}
+				else {
+					while (queue2.size() != 1) {
+						queue1.push(queue2.front());
+						queue2.pop();
+					}
+					T result = queue2.front();
+					queue2.pop();
+					return result;
+				}
+			}
+		}
+		else          //如果queue1不为空
+		{
+			if (queue1.size() == 1)     //如果queue1中只有队尾元素时，直接退出
+			{
+				T result = queue1.front();
+				queue1.pop();
+				return result;
+			}
+
+			else {
+				while (queue1.size() != 1) {
+					queue2.push(queue1.front());
+					queue1.pop();
+				}
+				T result = queue1.front();
+				queue1.pop();
+				return result;
+			}
+		}
+
+	}
+private:
+	queue<T> queue1;
+	queue<T> queue2;
+};
+
+int main()
+{
+	Cstack<char> stack;
+	//测试用例1:
+	stack.push('a');           //元素a入栈
+	stack.push('b');           //元素b入栈
+	stack.push('c');           //元素c入栈
+	stack.push('d');           //元素d入栈
+	cout << "第1次出栈元素是：" << stack.pop() << endl;
+	cout << "第2次出栈元素是：" << stack.pop() << endl;
+	cout << "第3次出栈元素是：" << stack.pop() << endl;
+	cout << "第4次出栈元素是：" << stack.pop() << endl;
+	system("pause");
+	return 0;
+}
+08 用递归行为得到数组中的最大值，并用master公式来估计时间复杂度
+#include <iostream>
+#include<vector>
+using namespace std;
+int process(vector<int>& b, int L, int R){
+	//数组为一个数字的情况
+	if (L == R) {
+		return b[L];
+	}
+	else {
+		int mid = L + ((R - L) >> 1);
+		int RMax = process(b, mid + 1, R);
+		int LMax = process(b, L, mid);
+		//将数组划分为左小区和右小区返回最大值
+		return max(LMax, RMax);
+	}
+ }
+int getMAx(vector<int>&a) {
+	return process(a, 0, a.size()-1);
+}
+
+int main(){
+//测试用例1:
+	vector<int>arr{ 4,3,5,6,7,1,2,3,7,9,5,4 };
+	cout << "最大值：" << endl;
+	cout<<getMAx(arr)<<endl;
+	system("pause");
+	return 0;
+
+}
 09 哈希表和有序表使用的code展示
 #include <iostream>
 #include<vector>
