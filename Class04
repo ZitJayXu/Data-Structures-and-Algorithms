@@ -1,0 +1,155 @@
+01 归并排序的递归实现
+#include <iostream>
+#include <vector>
+using namespace std;
+void merge(vector<int>&c, int L, int M, int R) {
+	vector<int>help(R - L + 1);
+	int i = 0, p1 = L, p2 = M + 1;
+	while (p1 <= M && p2 <= R) {
+		help[i++] = c[p1] <= c[p2] ? c[p1++] : c[p2++];
+	}
+	while (p1 <= M) {
+		help[i++] = c[p1++];
+	}
+	while (p2 <= R) {
+		help[i++] = c[p2++];
+	}
+	for (i = 0; i < help.size(); i++) {
+		c[L + i] = help[i];
+	}
+}
+void Process(vector <int>& b, int L, int R) {
+	if (L == R) {
+		return;
+	}
+	int mid = L + ((R - L) >> 1);
+	Process(b, L, mid);
+	Process(b, mid + 1, R);
+	merge(b, L, mid, R);
+}
+void megeSort1(vector<int>& a) {
+	if (a.size() == 1) {
+		return;
+	}
+	Process(a, 0, a.size() - 1);
+	for (int j = 0; j < a.size(); j++) {
+		cout << a[j] << " ";
+	}
+}
+int main()
+{
+	vector<int>test{ 4,6,7,3,2,1,5 };
+	megeSort1(test);
+	system("pause");
+	return 0;
+}
+// 非递归实现
+#include <iostream>
+#include <vector>
+using namespace std;
+void merge(vector<int>& arr, int L, int M, int R) {
+	vector<int>help(R - L + 1);
+	int i = 0;
+	int p1 = L;
+	int p2 = M + 1;
+	while (p1 <= M && p2 <= R) {
+		help[i++] = arr[p1] <= arr[p2] ? arr[p1++] : arr[p2++];
+	}
+	// 要么p1越界了，要么p2越界了
+	while (p1 <= M) {
+		help[i++] = arr[p1++];
+	}
+	while (p2 <= R) {
+		help[i++] = arr[p2++];
+	}
+	for (i = 0; i < help.size(); i++) {
+		arr[L + i] = help[i];
+	}
+}
+void megeSort1(vector<int>& a) {
+	if (a.size() == 1) {
+		return;
+	}
+	int N = a.size();
+	//确定步长
+	int mergSize = 1;
+	while (mergSize < N) {
+		int L = 0;
+		while (L < N) {
+			if (mergSize >= N - L) {
+				break;
+			}
+			int M = L + mergSize - 1;
+			int R = M + min(mergSize, N - M - 1);
+			merge(a, L, M, R);
+			L = R + 1;
+		}
+		//避免溢出
+		if (mergSize > N / 2) {
+			break;
+		}
+		mergSize <<= 1;
+	}
+	for (int i = 0; i < a.size(); i++) {
+		cout << a[i] << " ";
+	}
+}
+int main()
+{
+	vector<int>test{ 4,6,7,3,2,1,5 };
+	megeSort1(test);
+	system("pause");
+	return 0;
+}
+02 在一个数组中，一个数左边比它小的数的总和，叫该数的小和所有数的小和累加起来，
+叫数组小和，给定一个数组arr，求数组小和
+#include <iostream>
+#include <vector>
+using namespace std;
+int merge(vector<int>&arr, int L, int m, int r) {
+	vector<int>help(r - L + 1);
+	int i = 0;
+	int p1 = L;
+	int p2 = m + 1;
+	int res = 0;
+	while (p1 <= m && p2 <= r) {
+		res += arr[p1] < arr[p2] ? (r - p2 + 1) * arr[p1] : 0;
+		help[i++] = arr[p1] < arr[p2] ? arr[p1++] : arr[p2++];
+	}
+	while (p1 <= m) {
+		help[i++] = arr[p1++];
+	}
+	while (p2 <= r) {
+		help[i++] = arr[p2++];
+	}
+	for (i = 0; i < help.size(); i++) {
+		arr[L + i] = help[i];
+	}
+	return res;
+}
+int process(vector<int>&arr, int l, int r) {
+	if (l == r) {
+		return 0;
+	}
+	// l < r
+	int mid = l + ((r - l) >> 1);
+	return
+		process(arr, l, mid)
+		+
+		process(arr, mid + 1, r)
+		+
+		merge(arr, l, mid, r);
+}
+int smallSum(vector<int> &arr) {
+	if (arr.size() < 2) {
+		return 0;
+	}
+	return process(arr, 0, arr.size() - 1);
+}
+int main()
+{
+	vector<int>test{ 4,6,7,3,2,1,5 };
+	cout << "最小和 " << smallSum(test) << endl;
+	system("pause");
+	return 0;
+}
